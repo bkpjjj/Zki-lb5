@@ -12,12 +12,9 @@ namespace Crypto
         public static BitArray LeftShift(this BitArray bit, int index)
         {
             BitArray bitArray = new BitArray(bit);
-            for (int i = 0; i < bitArray.Length; i++)
+            for (int i = 0; i < bit.Length; i++)
             {
-                if (i + index < bitArray.Length)
-                    bitArray[i] = bitArray[i + index];
-                else
-                    bitArray[i] = false;
+                bitArray[(i + index) % bit.Length] = bit[i];
             }
             return bitArray;
         }
@@ -209,7 +206,7 @@ namespace Crypto
                 int shift = 0;
                 for (int i = 0; i < roundIndex; i++)
                 {
-                    shift += rpos[i]; 
+                    shift += rpos[i];
                 }
                 C = C.LeftShift(shift);
                 D = D.LeftShift(shift);
