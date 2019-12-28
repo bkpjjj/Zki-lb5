@@ -11,19 +11,23 @@ namespace Crypto
     {
         public static BitArray LeftShift(this BitArray bit, int index)
         {
-            //Console.WriteLine("St:" + string.Join(",", GetBinary(bit).Select(x => x ? 1 : 0)));
-            for (int i = 0; i < bit.Length; i++)
+            BitArray bitArray = new BitArray(bit);
+            for (int i = 0; i < bitArray.Length; i++)
             {
-                if (i + index < bit.Length)
-                    bit[i] = bit[i + index];
+                if (i + index < bitArray.Length)
+                    bitArray[i] = bitArray[i + index];
                 else
-                    bit[i] = false;
+                    bitArray[i] = false;
             }
-            //Console.WriteLine("Ed:" + string.Join(",", GetBinary(bit).Select(x => x ? 1 : 0)));
-            return new BitArray(bit);
+            return bitArray;
         }
-
-        private static bool[] GetBinary(BitArray bitArray)
+        public static byte[] GetBytes(this BitArray bitArray)
+        {
+            byte[] bytes = new byte[bitArray.Length / 8];
+            bitArray.CopyTo(bytes, 0);
+            return bytes;
+        }
+        public static bool[] GetBinary(this BitArray bitArray)
         {
             bool[] bin = new bool[bitArray.Length];
             bitArray.CopyTo(bin, 0);
@@ -186,7 +190,6 @@ namespace Crypto
             /// <returns></returns>
             private BitArray GenerateKey(BitArray bitArray, int roundIndex)
             {
-                //TODO: Генерирование ключей k_i
                 bool[] bin = GetBinary(bitArray);
                 for (int i = 0; i < bin.Length / 8; i++)
                 {
@@ -204,8 +207,9 @@ namespace Crypto
                 int[] rpos = { 1, 1, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 1 };
                 for (int i = 0; i < 28; i++)
                 {
-                    C.LeftShift(rpos[roundIndex]);
-                    D.LeftShift(rpos[roundIndex]);
+                    int shift = rpos[roundIndex];
+                    C.LeftShift(shift);
+                    D.LeftShift(shift);
                 }
                 bool[] C_bin = GetBinary(C);
                 bool[] D_bin = GetBinary(D);
@@ -226,7 +230,9 @@ namespace Crypto
             {
                 List<bool> result = new List<bool>();
                 BitArray Expanded = Expand(bitArray);
-                Expanded = Expanded.Xor(GenerateKey(bitKey, roundIndex));
+                BitArray generatedKey = GenerateKey(bitKey, roundIndex);
+                Console.WriteLine($"Key{roundIndex.ToString().PadRight(3)}:" + string.Join("-",generatedKey.GetBytes().Select(x => x.ToString("X"))));
+                Expanded = Expanded.Xor(generatedKey);
                 int size = 8;
                 bool[] binary = GetBinary(Expanded);
                 for (int i = 0; i < size; i++)
@@ -298,6 +304,7 @@ namespace Crypto
             foreach (Block block in blocks)
             {
                 block.IP();
+                Console.WriteLine($"Key   :" + string.Join("-", _binaryKey.GetBytes().Select(x => x.ToString("X"))));
                 for (int i = 0; i < 16; i++)
                     block.Round(_binaryKey, i);
                 block.INV_IP();

@@ -14,8 +14,8 @@ namespace DEST.Test
         static void Main(string[] args)
         {
             Console.OutputEncoding = Encoding.UTF8;
-            DES dES = new DES("7bit");
-            string en = dES.Encode(File.ReadAllText("text.txt"));
+            DES dES = new DES("1112");
+            string en = dES.Encode("Hello World!");
             Console.WriteLine("Encoded:" + en);
             File.WriteAllText("dec.txt", en);
             Console.ReadKey();
