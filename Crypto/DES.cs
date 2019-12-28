@@ -205,12 +205,15 @@ namespace Crypto
                 BitArray C = new BitArray(SubArray(CD, 0, 28));
                 BitArray D = new BitArray(SubArray(CD, 28, 28));
                 int[] rpos = { 1, 1, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 1 };
-                for (int i = 0; i < 28; i++)
+
+                int shift = 0;
+                for (int i = 0; i < roundIndex; i++)
                 {
-                    int shift = rpos[roundIndex];
-                    C.LeftShift(shift);
-                    D.LeftShift(shift);
+                    shift += rpos[i]; 
                 }
+                C = C.LeftShift(shift);
+                D = D.LeftShift(shift);
+
                 bool[] C_bin = GetBinary(C);
                 bool[] D_bin = GetBinary(D);
                 List<bool> CD_bin = new List<bool>();
@@ -231,7 +234,7 @@ namespace Crypto
                 List<bool> result = new List<bool>();
                 BitArray Expanded = Expand(bitArray);
                 BitArray generatedKey = GenerateKey(bitKey, roundIndex);
-                Console.WriteLine($"Key{roundIndex.ToString().PadRight(3)}:" + string.Join("-",generatedKey.GetBytes().Select(x => x.ToString("X"))));
+                Console.WriteLine($"Key{roundIndex.ToString().PadRight(3)}:" + string.Join("-", generatedKey.GetBytes().Select(x => x.ToString("X"))));
                 Expanded = Expanded.Xor(generatedKey);
                 int size = 8;
                 bool[] binary = GetBinary(Expanded);
