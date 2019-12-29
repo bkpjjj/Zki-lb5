@@ -6,6 +6,9 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Crypto", "Crypto\Crypto.csproj", "{5E705012-EE82-4498-891F-91A74F464016}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DES.Test", "DES.Test\DES.Test.csproj", "{457D12D1-34EC-4DD7-977E-8A7FA1D12624}"
+	ProjectSection(ProjectDependencies) = postProject
+		{5E705012-EE82-4498-891F-91A74F464016} = {5E705012-EE82-4498-891F-91A74F464016}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
