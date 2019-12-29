@@ -13,10 +13,12 @@ namespace DEST.Test
     {
         static void Main(string[] args)
         {
-            Console.OutputEncoding = Encoding.UTF8;
-            DES dES = new DES("7bit");
-            string en = dES.Encode("Hello World!");
+            Console.OutputEncoding = Encoding.Unicode;
+            DES dES = new DES("aaaa");
+            string en = dES.Encode(File.ReadAllText(@"text put here"));
             Console.WriteLine("Encoded:" + en);
+            string dc = dES.Decode(en);
+            Console.WriteLine("Decoded:" + dc);
             Console.ReadKey();
         }
     }
